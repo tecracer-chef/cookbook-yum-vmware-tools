@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: yumrepo
-# Recipe:: vmware-tools-upgrade
+# Cookbook Name:: vmware-tools
+# Recipe:: undo
 #
 # Copyright 2010, Eric G. Wolfe
 # Copyright 2010, Tippr Inc.
@@ -18,48 +18,57 @@
 # limitations under the License.
 #
 
-packages = [
-  "vmware-tools-nox",
-  "vmware-tools-common",
-  "vmware-open-vm-tools-common",
-  "vmware-open-vm-tools-nox",
-  "vmware-open-vm-tools-kmod",
-  "vmware-open-vm-tools-xorg-drv-display",
-  "vmware-open-vm-tools-xorg-drv-mouse"
+# List of current, and past packages to remove
+vmware_packages = %w[
+  vmware-tools-nox
+  vmware-tools-common
+  vmware-open-vm-tools-common
+  vmware-open-vm-tools-nox
+  vmware-open-vm-tools-kmod
+  vmware-open-vm-tools-xorg-drv-display
+  vmware-open-vm-tools-xorg-drv-mouse
+  vmware-tools-esx
+  vmware-tools-esx-nox
+  open-vm-tools
+]
+
+# List of current, and past services to remove
+vmware_services = %w[
+  vmware-tools
+  vmware-tools-services
+  vmtoolsd
 ]
 
 # Stop vmware-tools service
-service "vmware-tools" do
-  supports :status => true, :restart => true
-  action [ :disable, :stop ]
+vmware_services.each do |vmsvc|
+  service vmpkg do
+    supports status: true, restart: true
+    action [:disable, :stop]
+    ignore_failure true
+  end
 end
 
 # Remove optional packages
-packages.each do |pkg|
-  package pkg do
+vmware_packages.each do |vmpkg|
+  package vmpkg do
     action :remove
     ignore_failure true
   end
 end
 
 # Execute yum clean all
-execute "yum -y clean all" do
+execute 'yum -y clean all' do
   action :nothing
 end
 
 # Remove yum repository file
-ruby_block "unlink vmware-tools 4.x repo file" do
-  block do
-    File.unlink("/etc/yum.repos.d/vmware-tools.repo")
-  end
-  only_if { File.exists?("/etc/yum.repos.d/vmware-tools.repo") }
-  notifies :run, "execute[yum -y clean all]", :immediately
+yum_repository 'vmware-tools' do
+  action :remove
+  notifies :run, 'execute[yum -y clean all]', :immediately
 end
 
-ruby_block "Removing vwmare-tools-upgrade recipe" do
+ruby_block 'Removing yumvwmare-tools::undo recipe' do
   block do
-    node.run_list.remove("recipe[yum-vmware-tools::undo]")
+    node.run_list.remove('recipe[yum-vmware-tools::undo]')
   end
 end
-
-include_recipe "yum-vmware-tools"

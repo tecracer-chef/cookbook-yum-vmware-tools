@@ -1,11 +1,10 @@
-# Yumrepo [![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yumrepo.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yumrepo)
+# yum-vmware-tools [![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools)
 
 ## Description
 
-Manages Yum Repository files in /etc/yum.repos.d on CentOS / RHEL 5.x.
+Installs vmware-tools for EL 5, from packages.vmware.com.
 
-Yum repositories included in this recipe:
-EPEL, ELFF, Dell OMSA, Dell Community, Dell Firmware, VMware Tools, and more...
+For EL 6, installs open-vm-tools, from EPEL.
 
 ## Requirements
 

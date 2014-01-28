@@ -1,23 +1,16 @@
 ---
-driver: docker 
+driver:
+  name: vagrant
 
 provisioner:
   name: chef_solo
 
 platforms:
-- name: centos-6.4
+  - name: centos-5.10 
+  - name: centos-6.4
 
 suites:
-- name: default
-  run_list:
-  - recipe[yum-vmware-tools::default]
-  attributes:
-    yum:
-      dell:
-        enabled: true
-- name: undo
-  run_list: [ 'recipe[yum-vmware-tools::default]', 'recipe[yum-vmware-tools::undo]' ]
-  attributes:
-  yum:
-    dell:
-      enabled: true 
+  - name: default
+    run_list:
+      - recipe[yum-vmware-tools::default]
+    attributes:

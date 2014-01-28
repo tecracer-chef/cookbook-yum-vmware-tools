@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: yumrepo
-# Attributes:: vmware 
+# Cookbook Name:: yum-vmware-tools
+# Attributes:: default
 #
-# Copyright 2010, Eric G. Wolfe 
+# Copyright 2010, Eric G. Wolfe
 # Copyright 2010, Tippr Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,30 +18,35 @@
 # limitations under the License.
 #
 
-# Attributes for VMware 5.x recipe
-default['repo']['vmware']['key'] = "VMWARE-PACKAGING-GPG-RSA-KEY"
-default['repo']['vmware']['release'] = "5.1"
-default['repo']['vmware']['install_optional'] = false
-default['repo']['vmware']['services'] = %w{ vmware-tools-services }
+default['yum']['vmware']['version'] = '5.1latest'
+default['yum']['vmware']['force_official'] = false
 
-case node['platform_version'].to_i
-when 6
-  default['repo']['vmware']['service_provider'] = Chef::Provider::Service::Upstart
+if node['dmi'] && node['dmi']['system'] &&
+   node['dmi']['system']['manufacturer'] &&
+   node['dmi']['system']['manufacturer'] =~ /vmware/i
+  default['yum']['vmware']['enabled'] = true
 else
-  default['repo']['vmware']['service_provider'] = Chef::Provider::Service::Init::Redhat
+  default['yum']['vmware']['enabled'] = false
 end
 
-if node['dmi'] and node['dmi']['system'] and node['dmi']['system']['manufacturer'] and node['dmi']['system']['manufacturer'] =~ /vmware/i and node['platform_version'].to_f >= 5
-  set['repo']['vmware']['enabled'] = true
-else
-  set['repo']['vmware']['enabled'] = false
+default['yum']['vmware']['baseurl'] = "http://packages.vmware.com/tools/esx/#{node['yum']['vmware']['version']}/rhel#{node['platform_version'].to_i}/$basearch"
+default['yum']['vmware']['gpgkey'] = 'http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub'
+
+if node['platform_version'].to_i == 5 || node['yum']['vmware']['force_official']
+  default['yum']['vmware']['packages'] = %w[
+    vmware-tools-esx
+    vmware-tools-esx-kmods
+  ]
+
+  default['yum']['vmware']['services'] = %w[
+    vmware-tools-services
+  ]
+elsif node['platform_version'].to_i == 6
+  default['yum']['vmware']['packages'] = %w[
+    open-vm-tools
+  ]
+
+  default['yum']['vmware']['services'] = %w[
+    vmtoolsd
+  ]
 end
-
-default['repo']['vmware']['url'] = "http://packages.vmware.com/tools/esx/#{node['repo']['vmware']['release']}/rhel#{node['platform_version'].to_i}/$basearch"
-default['repo']['vmware']['key_url'] = "http://packages.vmware.com/tools/keys/#{node['repo']['vmware']['key']}.pub"
-
-default['repo']['vmware']['required_packages'] = [
-  "vmware-tools-esx-nox",
-  "vmware-tools-esx-kmods"
-]
-default['repo']['vmware']['optional_packages'] = Array.new
