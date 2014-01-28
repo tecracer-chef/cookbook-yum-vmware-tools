@@ -1,4 +1,6 @@
 metadata.json
-Gemfile.lock
+*.lock
 .kitchen/
 .kitchen.local.yml
+.coverage
+checkstyle.xml

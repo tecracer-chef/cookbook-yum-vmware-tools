@@ -1,8 +1,9 @@
 #
 # Cookbook Name:: yumrepo
-# Attributes:: default
+# Attributes:: vmware 
 #
-# Copyright 2011, Eric G. Wolfe 
+# Copyright 2010, Eric G. Wolfe 
+# Copyright 2010, Tippr Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,4 +18,30 @@
 # limitations under the License.
 #
 
-default['repo']['key_path'] = "/etc/pki/rpm-gpg"
+# Attributes for VMware 5.x recipe
+default['repo']['vmware']['key'] = "VMWARE-PACKAGING-GPG-RSA-KEY"
+default['repo']['vmware']['release'] = "5.1"
+default['repo']['vmware']['install_optional'] = false
+default['repo']['vmware']['services'] = %w{ vmware-tools-services }
+
+case node['platform_version'].to_i
+when 6
+  default['repo']['vmware']['service_provider'] = Chef::Provider::Service::Upstart
+else
+  default['repo']['vmware']['service_provider'] = Chef::Provider::Service::Init::Redhat
+end
+
+if node['dmi'] and node['dmi']['system'] and node['dmi']['system']['manufacturer'] and node['dmi']['system']['manufacturer'] =~ /vmware/i and node['platform_version'].to_f >= 5
+  set['repo']['vmware']['enabled'] = true
+else
+  set['repo']['vmware']['enabled'] = false
+end
+
+default['repo']['vmware']['url'] = "http://packages.vmware.com/tools/esx/#{node['repo']['vmware']['release']}/rhel#{node['platform_version'].to_i}/$basearch"
+default['repo']['vmware']['key_url'] = "http://packages.vmware.com/tools/keys/#{node['repo']['vmware']['key']}.pub"
+
+default['repo']['vmware']['required_packages'] = [
+  "vmware-tools-esx-nox",
+  "vmware-tools-esx-kmods"
+]
+default['repo']['vmware']['optional_packages'] = Array.new

@@ -58,8 +58,8 @@ end
 
 ruby_block "Removing vwmare-tools-upgrade recipe" do
   block do
-    node.run_list.remove("recipe[yumrepo::vmware-tools-upgrade]")
+    node.run_list.remove("recipe[yum-vmware-tools::undo]")
   end
 end
 
-include_recipe "yumrepo::vmware-tools"
+include_recipe "yum-vmware-tools"

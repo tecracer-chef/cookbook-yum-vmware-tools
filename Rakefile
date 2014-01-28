@@ -41,4 +41,4 @@ end
 task :default => ['foodcritic', 'rubocop', 'chefspec']
 
 # jenkins tasks format for metric tracking
-task :jenkins => ['foodcritic', 'rubocop_checkformat', 'chefspec'] 
+task :jenkins => ['foodcritic', 'rubocop_checkformat'] 
