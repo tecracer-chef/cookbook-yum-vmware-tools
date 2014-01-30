@@ -1,129 +1,84 @@
-# yum-vmware-tools [![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools)
+yum-vmware-tools Cookbook
+=========================
 
-## Description
+[![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yum-vmware-tools)
 
 Installs vmware-tools for EL 5, from packages.vmware.com.
 
-For EL 6, installs open-vm-tools, from EPEL.
+For EL 6, installs open-vm-tools by default, from EPEL.
 
-## Requirements
+An undo recipe is included to remove, and cleanup, older vmware-tools installations.
 
-This cookbook requires RHEL or CentOS 5.x, and newer.
-It has not been tested on other platforms.  It probably will
-not work with RHEL 4 or CentOS 4, especially if you have not
-taken action to manually install yum on that platform.
+Requirements
+------------
 
-## Notes
+* RHEL platform family, version 5 or 6. 
+* VMWare guest.
+
+#### packages
+
+- `dmidecode` - needs dmidecode to inspect BIOS, and determine VMWare virtual hardware.
+
+Attributes
+----------
+
+#### yum-vmware-tools::default
+
+These are the attributes you may need to override in a role.
+
+* `yum['vmware']['version']` - VMWare Tool release string, used to compute baseurl.
+  - Default, '5.1latest'
+
+* `yum['vmware']['force_official']` - Force official VMWare packages to be used as the yum source on EL6.
+     Opposed to using open-vm-tools sourced from EPEL.
+  - Default, false, uses open-vm-tools from EPEL.
+
+These are attributes you should probably leave alone.
+
+* `yum['vmware']['enabled']` - Boolean flag, computed by presence of VMWare virtual hardware.
+  - Default, true when `dmi['system']['manufacturer']` is `'VMWare Inc.'`, false on other hardware.
+
+* `yum['vmware']['baseurl']` - Base URL, to use in the vmware-tools.repo file.
+  - Default, computed by `yum['vmware']['version']` and `node['platform_version']`.
+
+* `yum['vmware']['gpgkey']` - URL of VMWare packaging key
+
+* `yum['vmware']['packages']` - List of packages to install
+  - EL5 default, [ vmware-tools-esx, vmware-tools-esx-kmods ]
+  - EL6 default, [ open-vm-tools ]
+
+* `yum['vmware']['services']` - Service script(s) to enable, and start
+  - EL5 default, [ vmware-tools-services ]
+  - EL6 default, [ vmtoolsd ]
+
+Usage
 -----
 
-RHEL 6 support is fairly well tested in the dell, vmware-tools, and
-epel recipes.  Let me know if you find a platform 6 bug, related to
-any one of the recipes.
+#### yum-vmware-tools::default
 
-The yumrepo::dell recipe requires Dell manufactured hardware.  This
-recipe should automatically disable itself if non-Dell hardware is
-detected by Ohai
+Example, force official repository on Enterprise Linux 6.x
 
-A **major breaking change in this cookbook is the introduction of an
-upgrade recipe** for vmware-tools.  Since VMWare does not support
-upgrades on their packaged vmware-tools, I created a
-vmware-tools-upgrade recipe to migrate from vmware-tools 4.1 to 5.x.  
-You should ensure the yumrepo recipes are not in a base role, until
-all your nodes have been migrated to 5.x.
+```
+default_attributes(
+  :yum => {
+    :vmware => {
+      :force_official => false
+    } 
+  }
+),
+run_list: [ "recipe[yum-vmware-tools]" ]
+```
 
-## Individual Recipe Usage:
+#### yum-vmware-tools::undo
 
-### yumrepo::default
+Example, remove older vmware-tools installation.
 
-Includes recipes:
+```
+run_list: [ "recipe[yum-vmware-tools::undo]" ]
+```
 
-* yum::yum
-* yum::epel
-* yumrepo::dell
-
-### yum::epel
-
-- Provides RPM keys and repo file for
-   Fedora EPEL (Extra Packages for Enterprise Linux)
-  * See http://fedoraproject.org/wiki/EPEL for more info
-
-### yumrepo::dell
-
-- Provides repo files for the following Dell repositories.
-  - hardware / Open Manage Server Administrator
-  - community / formerly the software repository
-  - firmware / Convenient but unsupported by Dell
-  * See http://linux.dell.com for more info
-
-- repo['dell]['download_firmware'] = true||false
-  * disables/enables community/firmware repositories in dell recipe
-  * OMSA (hardware) repository will detect Dell hardware platform and
-    enable itself, dynamically. It is not affected by this attribute.
-
-### yumrepo::rbel
-
-- Provides repo files for rbel.frameos.org
-  * Ruby and Opscode Chef packages for RHEL distros 
-
-### yumrepo::vmware-tools-upgrade
-
-- Removes vmware-tools for ESX 4.1 installed with this cookbook.
-  Then includes the yumrepo::vmware-tools recipe to re-install
-  VMWare Tools compatiblie with ESX 5.1.  *This must be in
-  your run list before the yumrepo::vmware-tools recipe* to
-  successfully upgrade the tools with the recipe.
-
-### yumrepo::vmware-tools
-
-- Uninstalls VMwareTools rpm installed from the
-   VMware "Install/Upgrade VMware Tools" menu
-- Uninstalls manually installed vmware-tools
-   packages, the recipe needs to first run
-   vmware-uninstall-tools.pl to use the RPM packages
-   from the repo.
-- Provides RPM keys and repo file for
-   VMware Tools for ESX
-  * See http://packages.vmware.com for more info
-
-- repo['vmware']['release'] (ESX version number, default 5.1)
-  * This is used to determine the correct URL in the
-    VMware RHEL5/CentOS repository.
-
-### yumrepo::percona
-
-- Percona MySQL repositories
-  * http://repo.percona.com/centos/
-
-### yumrepo::postgresql
-
-- PostgreSQL RPMs
-  * See http://pgrpms.org for more information.
-
-- repo['postgresql']['version']
-  * Select version of Postgres to install via attribute.
-
-### yumrepo::zenoss
-
-- ZenOss Network Monitoring System
-  * See http://zenoss.org for more information
-
-### yumrepo::zeromq
-
-- [ZeroMQ](http://www.zeromq.org/distro:centos)
-  * This repository hosts the latest stable builds for zeromq
-
-### yumrepo::corporate
-
-- Generic example recipe to be used with an internal Yum mirror, or
-  repository.
-  * By default this recipe uses the basename of your domain as the
-    repository name.
-
-### yumrepo::jenkins
-
-- Jenkins CI yum repository
-
-## License and Author
+License and Authors
+-------------------
 
 Author:: Eric G. Wolfe
 Copyright:: 2010-2011

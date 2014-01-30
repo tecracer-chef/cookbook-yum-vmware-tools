@@ -13,7 +13,7 @@ end
 # rubocop rake task
 desc 'Ruby style guide linter'
 task :rubocop do
-  sh 'rubocop'
+  sh 'rubocop .'
 end
 
 # rubocop jenkins rake task
@@ -41,4 +41,4 @@ end
 task :default => ['foodcritic', 'rubocop', 'chefspec']
 
 # jenkins tasks format for metric tracking
-task :jenkins => ['foodcritic', 'rubocop_checkformat'] 
+task :jenkins => ['foodcritic', 'rubocop_checkformat', 'chefspec'] 
