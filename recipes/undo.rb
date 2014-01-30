@@ -41,7 +41,7 @@ vmware_services = %w[
 
 # Stop vmware-tools service
 vmware_services.each do |vmsvc|
-  service vmpkg do
+  service vmsvc do
     supports status: true, restart: true
     action [:disable, :stop]
     ignore_failure true
@@ -63,11 +63,11 @@ end
 
 # Remove yum repository file
 yum_repository 'vmware-tools' do
-  action :remove
+  action :delete
   notifies :run, 'execute[yum -y clean all]', :immediately
 end
 
-ruby_block 'Removing yumvwmare-tools::undo recipe' do
+ruby_block 'Removing yum-vwmare-tools::undo recipe' do
   block do
     node.run_list.remove('recipe[yum-vmware-tools::undo]')
   end

@@ -2,9 +2,6 @@
 driver:
   name: vagrant
 
-provisioner:
-  name: chef_solo
-
 platforms:
   - name: centos-5.10 
   - name: centos-6.4
@@ -14,3 +11,14 @@ suites:
     run_list:
       - recipe[yum-vmware-tools::default]
     attributes:
+      yum:
+        vmware:
+          enabled: true
+  - name: undo
+    run_list:
+      - recipe[yum-vmware-tools::default]
+      - recipe[yum-vmware-tools::undo]
+    attributes:
+      yum:
+        vmware:
+          enabled: true
