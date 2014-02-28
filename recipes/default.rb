@@ -39,6 +39,9 @@ end
 
 node['yum']['vmware']['services'].each do |vmware_svc|
   service vmware_svc do
+    if node['platform_version'].to_i == 6 && node['yum']['vmware']['force_official']
+      provider Chef::Provider::Service::Upstart  
+    end
     action [:enable, :start]
   end
 end
