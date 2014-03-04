@@ -80,7 +80,7 @@ run_list: [ "recipe[yum-vmware-tools::undo]" ]
 License and Authors
 -------------------
 
-Author:: Eric G. Wolfe
+Author:: Eric G. Wolfe <eric.wolfe@gmail.com> [![endorse](https://api.coderwall.com/atomic-penguin/endorsecount.png)](https://coderwall.com/atomic-penguin)
 Copyright:: 2010-2011
 
 Author:: Tippr, Inc.

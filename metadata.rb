@@ -3,7 +3,7 @@ maintainer_email 'wolfe21@marshall.edu'
 license          'Apache 2.0'
 description      'Installs and configures VMWare yum repositories.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '3.0.1'
+version          '3.0.2'
 depends          'yum'
 depends          'yum-epel'
 name             'yum-vmware-tools'

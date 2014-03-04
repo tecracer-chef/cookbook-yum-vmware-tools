@@ -1,8 +1,15 @@
 yum-vmware-tools Changelog
 ==========================
 
+v3.0.2
+------
+
+* Force upstart on EL6 && stock vmware-tools
+
 v3.0.0
 ------
+
+* yumrepo refactored into yum-vmware-tools
 
 v2.1.0
 ------
