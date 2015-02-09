@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'yum-vmware-tools::default' do
   context 'on Centos 6.4 x86_64 with VMWare hardware' do
     let(:chef_run) do
-      ChefSpec::Runner.new(platform: 'centos', version: 6.4, step_into: ['yum_repository']) do |node|
+      ChefSpec::ServerRunner.new(platform: 'centos', version: 6.4, step_into: ['yum_repository']) do |node|
         node.automatic['dmi']['system']['manufacturer'] = 'VMWare Inc.'
         node.automatic['kernel']['machine'] = 'x86_64'
       end.converge(described_recipe)
@@ -21,12 +21,11 @@ describe 'yum-vmware-tools::default' do
       expect(chef_run).to start_service('vmtoolsd')
       expect(chef_run).to enable_service('vmtoolsd')
     end
-
   end
 
   context 'on Centos 6.4 x86_64 with force_official' do
     let(:chef_run) do
-      ChefSpec::Runner.new(platform: 'centos', version: 6.4, step_into: ['yum_repository']) do |node|
+      ChefSpec::ServerRunner.new(platform: 'centos', version: 6.4, step_into: ['yum_repository']) do |node|
         node.automatic['dmi']['system']['manufacturer'] = 'VMWare Inc.'
         node.automatic['kernel']['machine'] = 'x86_64'
         node.override['yum']['vmware']['force_official'] = true
@@ -51,7 +50,7 @@ describe 'yum-vmware-tools::default' do
 
   context 'on Centos 5.9 x86_64 with force_official' do
     let(:chef_run) do
-      ChefSpec::Runner.new(platform: 'centos', version: 5.9, step_into: ['yum_repository']) do |node|
+      ChefSpec::ServerRunner.new(platform: 'centos', version: 5.9, step_into: ['yum_repository']) do |node|
         node.automatic['dmi']['system']['manufacturer'] = 'VMWare Inc.'
         node.automatic['kernel']['machine'] = 'x86_64'
         node.override['yum']['vmware']['version'] = '5.5latest'
@@ -72,5 +71,4 @@ describe 'yum-vmware-tools::default' do
       expect(chef_run).to enable_service('vmware-tools-services')
     end
   end
-
 end

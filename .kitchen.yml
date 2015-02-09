@@ -4,7 +4,7 @@ driver:
 
 platforms:
   - name: centos-5.10 
-  - name: centos-6.4
+  - name: centos-6.5
 
 suites:
   - name: default
