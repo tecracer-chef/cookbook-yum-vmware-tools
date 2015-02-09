@@ -1,6 +1,12 @@
 yum-vmware-tools Changelog
 ==========================
 
+v3.1.0
+------
+
+* Reload Ohai data after dmidecode is installed
+  for force_official evaluation consistency.
+
 v3.0.2
 ------
 
