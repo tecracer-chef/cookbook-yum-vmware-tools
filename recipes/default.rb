@@ -18,7 +18,10 @@
 # limitations under the License.
 #
 
-package 'dmidecode'
+package 'dmidecode' do
+  notifies :reload, 'ohai[reload after dmidecode install]', :immediately
+end  
+
 ohai 'reload after dmidecode install'
 
 return unless node['yum']['vmware']['enabled']
