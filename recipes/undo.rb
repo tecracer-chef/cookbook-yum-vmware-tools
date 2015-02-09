@@ -19,7 +19,7 @@
 #
 
 # List of current, and past packages to remove
-vmware_packages = %w[
+vmware_packages = %w(
   vmware-tools-nox
   vmware-tools-common
   vmware-open-vm-tools-common
@@ -30,14 +30,14 @@ vmware_packages = %w[
   vmware-tools-esx
   vmware-tools-esx-nox
   open-vm-tools
-]
+)
 
 # List of current, and past services to remove
-vmware_services = %w[
+vmware_services = %w(
   vmware-tools
   vmware-tools-services
   vmtoolsd
-]
+)
 
 # Stop vmware-tools service
 vmware_services.each do |vmsvc|

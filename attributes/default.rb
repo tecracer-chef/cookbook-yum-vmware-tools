@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-default['yum']['vmware']['version'] = '5.1latest'
+default['yum']['vmware']['version'] = 'latest'
 default['yum']['vmware']['force_official'] = false
 
 if node['dmi'] && node['dmi']['system'] &&
@@ -33,20 +33,17 @@ default['yum']['vmware']['baseurl'] = "http://packages.vmware.com/tools/esx/#{no
 default['yum']['vmware']['gpgkey'] = 'http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub'
 
 if node['platform_version'].to_i == 5 || node['yum']['vmware']['force_official']
-  default['yum']['vmware']['packages'] = %w[
+  default['yum']['vmware']['packages'] = %w(
     vmware-tools-esx
     vmware-tools-esx-kmods
-  ]
+  )
 
-  default['yum']['vmware']['services'] = %w[
-    vmware-tools-services
-  ]
-elsif node['platform_version'].to_i == 6
-  default['yum']['vmware']['packages'] = %w[
-    open-vm-tools
-  ]
+  default['yum']['vmware']['services'] = %w(
+    vmware-tools-services  )
+elsif node['platform_version'].to_i >= 6
+  default['yum']['vmware']['packages'] = %w(
+    open-vm-tools  )
 
-  default['yum']['vmware']['services'] = %w[
-    vmtoolsd
-  ]
+  default['yum']['vmware']['services'] = %w(
+    vmtoolsd  )
 end
