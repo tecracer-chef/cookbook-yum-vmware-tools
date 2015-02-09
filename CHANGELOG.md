@@ -6,6 +6,7 @@ v3.1.0
 
 * Reload Ohai data after dmidecode is installed
   for force_official evaluation consistency.
+* Change yum.vmware.version from 5.1latest to latest
 
 v3.0.2
 ------

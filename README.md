@@ -27,7 +27,7 @@ Attributes
 These are the attributes you may need to override in a role.
 
 * `yum['vmware']['version']` - VMWare Tool release string, used to compute baseurl.
-  - Default, '5.1latest'
+  - Default, 'latest'
 
 * `yum['vmware']['force_official']` - Force official VMWare packages to be used as the yum source on EL6.
      Opposed to using open-vm-tools sourced from EPEL.
