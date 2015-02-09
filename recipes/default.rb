@@ -19,6 +19,7 @@
 #
 
 package 'dmidecode'
+ohai 'reload after dmidecode install'
 
 return unless node['yum']['vmware']['enabled']
 
