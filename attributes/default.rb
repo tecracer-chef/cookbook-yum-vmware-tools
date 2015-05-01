@@ -19,7 +19,6 @@
 #
 
 default['yum']['vmware']['version'] = 'latest'
-default['yum']['vmware']['force_official'] = false
 
 if node['dmi'] && node['dmi']['system'] &&
    node['dmi']['system']['manufacturer'] &&

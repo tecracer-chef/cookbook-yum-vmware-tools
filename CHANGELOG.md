@@ -1,6 +1,11 @@
 yum-vmware-tools Changelog
 ==========================
 
+v3.1.1
+
+* Fixes #2 - attribute load ordering
+* Use shared_examples in rspec
+
 v3.1.0
 ------
 

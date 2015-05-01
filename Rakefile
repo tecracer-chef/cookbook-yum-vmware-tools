@@ -33,6 +33,3 @@ end
 
 # default tasks are quick, commit tests
 task default: %w(foodcritic rubocop chefspec)
-
-# jenkins tasks format for metric tracking
-task jenkins: %w(default)

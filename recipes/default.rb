@@ -18,6 +18,9 @@
 # limitations under the License.
 #
 
+# ISSUE #2 - attribute load ordering
+node.default['yum']['vmware']['force_official'] = false
+
 package 'dmidecode' do
   notifies :reload, 'ohai[ohai_reload]', :immediately
 end
